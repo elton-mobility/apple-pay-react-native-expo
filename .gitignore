@@ -8,7 +8,7 @@ jsconfig.json
 
 # Xcode
 #
-build/
+!build/
 !plugin/build/
 *.pbxuser
 !default.pbxuser
