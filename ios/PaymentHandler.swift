@@ -151,8 +151,8 @@ extension PaymentHandler: PKPaymentAuthorizationControllerDelegate {
     func paymentAuthorizationController(_ controller: PKPaymentAuthorizationController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
         handleCompletion = completion
         do {
-            // payment.token.paymentData is empty on simulator
-            var json: [String : Any]? = try JSONSerialization.jsonObject(with: payment.token.paymentData, options: []) as? [String: Any] 
+            // payment.token is the full payment data
+            var json: [String : Any]? = try JSONSerialization.jsonObject(with: payment.token, options: []) as? [String: Any] 
             if let paymentNetwork = payment.token.paymentMethod.network?.rawValue {
                 json!["paymentNetwork"] = paymentNetwork
             } else {
