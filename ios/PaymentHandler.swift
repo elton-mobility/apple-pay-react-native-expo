@@ -151,19 +151,34 @@ extension PaymentHandler: PKPaymentAuthorizationControllerDelegate {
     func paymentAuthorizationController(_ controller: PKPaymentAuthorizationController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
         handleCompletion = completion
         do {
-            // payment.token is the full payment data
-            var json: [String : Any]? = try JSONSerialization.jsonObject(with: payment.token, options: []) as? [String: Any] 
+            // Parse the payment data
+            var paymentData: [String : Any]? = try JSONSerialization.jsonObject(with: payment.token.paymentData, options: []) as? [String: Any]
+            
+            // Add payment network to payment data
             if let paymentNetwork = payment.token.paymentMethod.network?.rawValue {
-                json!["paymentNetwork"] = paymentNetwork
+                paymentData?["paymentNetwork"] = paymentNetwork
             } else {
                 print("Payment network is nil")
-            } 
-            // Serialize the dictionary back to JSON data
-            var updatedData: Data = try JSONSerialization.data(withJSONObject: json, options: [])
+            }
             
-            // Resolve the promise with the updated JSON data
-            let appendedJson = try JSONSerialization.jsonObject(with: updatedData, options: []) 
-            promise?.resolve(appendedJson)
+            // Build payment method object
+            var paymentMethodDict: [String: Any] = [:]
+            if let network = payment.token.paymentMethod.network?.rawValue {
+                paymentMethodDict["network"] = network
+            }
+            if let displayName = payment.token.paymentMethod.displayName {
+                paymentMethodDict["displayName"] = displayName
+            }
+            paymentMethodDict["type"] = payment.token.paymentMethod.type.rawValue
+            
+            // Build the full payment token structure
+            let fullPaymentData: [String: Any] = [
+                "paymentData": paymentData as Any,
+                "transactionIdentifier": payment.token.transactionIdentifier,
+                "paymentMethod": paymentMethodDict
+            ]
+            
+            promise?.resolve(fullPaymentData)
             promise = nil
         } catch {
             promise?.reject("payment_data_json", "failed to parse")
