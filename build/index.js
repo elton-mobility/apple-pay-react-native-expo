@@ -1,4 +1,4 @@
-import { MerchantCapability, PaymentNetwork, CompleteStatus } from "./ExpoApplePay.types";
+import { CompleteStatus, MerchantCapability, PaymentNetwork, } from "./ExpoApplePay.types";
 import ExpoApplePayModule from "./ExpoApplePayModule";
 export default {
     show: (data) => {

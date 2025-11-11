@@ -1,4 +1,4 @@
-import { MerchantCapability, PaymentNetwork, CompleteStatus, PaymentData } from "./ExpoApplePay.types";
+import { CompleteStatus, type FullPaymentData, MerchantCapability, PaymentNetwork } from "./ExpoApplePay.types";
 declare const _default: {
     show: (data: {
         merchantIdentifier: string;
@@ -10,7 +10,7 @@ declare const _default: {
             label: string;
             amount: number;
         }[];
-    }) => Promise<PaymentData>;
+    }) => Promise<FullPaymentData>;
     dismiss: () => void;
     complete: (status: CompleteStatus) => void;
 };
