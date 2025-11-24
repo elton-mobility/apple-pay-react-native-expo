@@ -50,6 +50,10 @@ export type PaymentData = {
 export type PaymentMethod = {
     type: "debit" | "credit" | "prepaid" | "store" | "eMoney" | "unknown";
     displayName: string;
+    /**
+     * Payment network name in uppercase format (e.g., "VISA", "MASTERCARD")
+     * as required by Dintero payment processing.
+     */
     network: string;
 };
 export type PaymentToken = {
