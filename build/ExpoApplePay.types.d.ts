@@ -44,13 +44,22 @@ export type PaymentData = {
         publicKeyHash: string;
         transactionId: string;
     };
-    paymentNetwork: string;
     signature: string;
     version: string;
 };
-export type FullPaymentData = {
+export type PaymentMethod = {
+    type: "debit" | "credit" | "prepaid" | "store" | "eMoney" | "unknown";
+    displayName: string;
+    network: string;
+};
+export type PaymentToken = {
     paymentData: PaymentData;
     transactionIdentifier: string;
-    paymentMethod: string;
+    paymentMethod: PaymentMethod;
+};
+export type FullPaymentData = {
+    payment: {
+        token: PaymentToken;
+    };
 };
 //# sourceMappingURL=ExpoApplePay.types.d.ts.map
