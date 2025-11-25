@@ -148,32 +148,6 @@ class PaymentHandler: NSObject  {
 }
 
 extension PaymentHandler: PKPaymentAuthorizationControllerDelegate {
-    private func convertNetworkToDinteroFormat(_ network: String) -> String {
-        // Convert network names to uppercase format expected by Dintero
-        // iOS returns "Visa", "MasterCard" etc., but Dintero expects "VISA", "MASTERCARD"
-        let networkMap: [String: String] = [
-            "Visa": "VISA",
-            "MasterCard": "MASTERCARD",
-            "Amex": "AMEX",
-            "Discover": "DISCOVER",
-            "JCB": "JCB",
-            "ChinaUnionPay": "CHINAUNIONPAY",
-            "Interac": "INTERAC",
-            "PrivateLabel": "PRIVATELABEL",
-            "Suica": "SUICA",
-            "VPay": "VPAY",
-            "Electron": "ELECTRON",
-            "Maestro": "MAESTRO",
-            "CartesBancaires": "CARTESBANCAIRES",
-            "Eftpos": "EFTPOS",
-            "Elo": "ELO",
-            "IdCredit": "IDCREDIT",
-            "Mada": "MADA",
-            "QuicPay": "QUICPAY"
-        ]
-        return networkMap[network] ?? network.uppercased()
-    }
-    
     func paymentAuthorizationController(_ controller: PKPaymentAuthorizationController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
         handleCompletion = completion
         do {
@@ -183,8 +157,7 @@ extension PaymentHandler: PKPaymentAuthorizationControllerDelegate {
             // Build payment method object
             var paymentMethodDict: [String: Any] = [:]
             if let network = payment.token.paymentMethod.network?.rawValue {
-                // Convert network to uppercase format expected by Dintero
-                paymentMethodDict["network"] = convertNetworkToDinteroFormat(network)
+                paymentMethodDict["network"] = network
             }
             if let displayName = payment.token.paymentMethod.displayName {
                 paymentMethodDict["displayName"] = displayName
